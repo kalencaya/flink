@@ -244,8 +244,7 @@ public abstract class FileInputFormat<OT> implements InputFormat<OT, FileInputSp
 			catch (RuntimeException rex) {
 				throw new RuntimeException("Could not create a valid URI from the given file path name: " + rex.getMessage()); 
 			}
-		}
-		else if (this.filePath == null) {
+		} else if (this.filePath == null) {
 			throw new IllegalArgumentException("File path was not specified in input format, or configuration."); 
 		}
 		
@@ -256,8 +255,7 @@ public abstract class FileInputFormat<OT> implements InputFormat<OT, FileInputSp
 				this.numSplits = -1;
 				if (LOG.isWarnEnabled())
 					LOG.warn("Ignoring invalid parameter for number of splits: " + desiredSplits);
-			}
-			else {
+			} else {
 				this.numSplits = desiredSplits;
 			}
 		}
@@ -384,10 +382,10 @@ public abstract class FileInputFormat<OT> implements InputFormat<OT, FileInputSp
 		minNumSplits = Math.max(minNumSplits, this.numSplits);
 		
 		final Path path = this.filePath;
-		final List<FileInputSplit> inputSplits = new ArrayList<FileInputSplit>(minNumSplits);
+		final List<FileInputSplit> inputSplits = new ArrayList(minNumSplits);
 
 		// get all the files that are involved in the splits
-		List<FileStatus> files = new ArrayList<FileStatus>();
+		List<FileStatus> files = new ArrayList();
 		long totalLength = 0;
 
 		final FileSystem fs = path.getFileSystem();

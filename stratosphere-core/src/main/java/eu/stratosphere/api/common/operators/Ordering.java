@@ -209,8 +209,7 @@ public class Ordering {
 	
 	
 
-	public Ordering clone()
-	{
+	public Ordering clone() {
 		final Ordering newOrdering = new Ordering();
 		newOrdering.indexes.addAll(this.indexes);
 		newOrdering.types.addAll(this.types);

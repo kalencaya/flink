@@ -19,9 +19,8 @@ import eu.stratosphere.core.io.IOReadableWritable;
 
 /**
  */
-public interface SerializationTestType extends IOReadableWritable
-{
-	public SerializationTestType getRandom(Random rnd);
+public interface SerializationTestType extends IOReadableWritable {
+	SerializationTestType getRandom(Random rnd);
 
 	// public static final String REST1_PATH = "src/test/resources/clustering/rest1.json";
 	// public static final String SAMPLE1_PATH = "src/test/resources/clustering/sample1.json";

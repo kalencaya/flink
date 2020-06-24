@@ -94,14 +94,12 @@ public abstract class GenericFlatTypePostPass<X, T extends AbstractSchema<X>> im
 				throw new CompilerPostPassException("Missing type infomation for the channel that inputs to the data sink '" +
 						sn.getSinkNode().getPactContract().getName() + "'.");
 			}
-		}
-		else if (node instanceof SourcePlanNode) {
+		} else if (node instanceof SourcePlanNode) {
 			if (createUtilities) {
 				((SourcePlanNode) node).setSerializer(createSerializer(parentSchema, node));
 				// nothing else to be done here. the source has no input and no strategy itself
 			}
-		}
-		else if (node instanceof BulkIterationPlanNode) {
+		} else if (node instanceof BulkIterationPlanNode) {
 			BulkIterationPlanNode iterationNode = (BulkIterationPlanNode) node;
 			
 			// get the nodes current schema
@@ -156,8 +154,7 @@ public abstract class GenericFlatTypePostPass<X, T extends AbstractSchema<X>> im
 					+ iterationNode.getPactContract().getName() + "'. Missing type information for key field " + 
 					e.getFieldNumber());
 			}
-		}
-		else if (node instanceof WorksetIterationPlanNode) {
+		} else if (node instanceof WorksetIterationPlanNode) {
 			WorksetIterationPlanNode iterationNode = (WorksetIterationPlanNode) node;
 			
 			// get the nodes current schema

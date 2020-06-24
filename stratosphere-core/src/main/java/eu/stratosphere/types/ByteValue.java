@@ -124,10 +124,8 @@ public class ByteValue implements Key, NormalizableKey, CopyableValue<ByteValue>
 			int highByte = this.value & 0xff;
 			highByte -= Byte.MIN_VALUE;
 			target.put(offset, (byte) highByte);
-		}
-		else if (len <= 0) {
-		}
-		else {
+		} else if (len <= 0) {
+		} else {
 			int highByte = this.value & 0xff;
 			highByte -= Byte.MIN_VALUE;
 			target.put(offset, (byte) highByte);

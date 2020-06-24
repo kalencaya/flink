@@ -125,13 +125,10 @@ public class CharValue implements Key, NormalizableKey, CopyableValue<CharValue>
 			// default case, full normalized key
 			target.put(offset,     (byte) ((value >>> 8) & 0xff));
 			target.put(offset + 1, (byte) ((value      ) & 0xff));
-		}
-		else if (len <= 0) {
-		}
-		else if (len == 1) {
+		} else if (len <= 0) {
+		} else if (len == 1) {
 			target.put(offset,     (byte) ((value >>> 8) & 0xff));
-		}
-		else {
+		} else {
 			target.put(offset,     (byte) ((value >>> 8) & 0xff));
 			target.put(offset + 1, (byte) ((value      ) & 0xff));
 			for (int i = 2; i < len; i++) {
