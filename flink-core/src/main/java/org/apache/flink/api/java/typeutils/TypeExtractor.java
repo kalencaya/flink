@@ -209,8 +209,7 @@ public class TypeExtractor {
 	 */
 	@PublicEvolving
 	@Deprecated
-	public static <IN, OUT> TypeInformation<OUT> getFoldReturnTypes(FoldFunction<IN, OUT> foldInterface, TypeInformation<IN> inType)
-	{
+	public static <IN, OUT> TypeInformation<OUT> getFoldReturnTypes(FoldFunction<IN, OUT> foldInterface, TypeInformation<IN> inType) {
 		return getFoldReturnTypes(foldInterface, inType, null, false);
 	}
 

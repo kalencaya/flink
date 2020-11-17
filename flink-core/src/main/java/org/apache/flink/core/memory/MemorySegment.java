@@ -423,11 +423,9 @@ public abstract class MemorySegment {
 		final long pos = address + index;
 		if (index >= 0 && pos <= addressLimit - 2) {
 			return UNSAFE.getChar(heapMemory, pos);
-		}
-		else if (address > addressLimit) {
+		} else if (address > addressLimit) {
 			throw new IllegalStateException("This segment has been freed.");
-		}
-		else {
+		} else {
 			// index is in fact invalid
 			throw new IndexOutOfBoundsException();
 		}
