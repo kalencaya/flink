@@ -142,17 +142,6 @@ class PlannerExpressionConverter private extends ApiExpressionVisitor[PlannerExp
       case fd: FunctionDefinition =>
         fd match {
 
-          case FLATTEN =>
-            assert(args.size == 1)
-            Flattening(args.head)
-
-          case GET =>
-            assert(args.size == 2)
-            val expr = GetCompositeField(args.head, getValue(args.last))
-            //it configures underlying state
-            expr.validateInput()
-            expr
-
           case IN =>
             assert(args.size > 1)
             In(args.head, args.drop(1))
@@ -404,6 +393,11 @@ class PlannerExpressionConverter private extends ApiExpressionVisitor[PlannerExp
 
   override def visit(lookupCall: LookupCallExpression): PlannerExpression =
     throw new TableException("Unsupported function call: " + lookupCall)
+
+  override def visit(sqlCall: SqlCallExpression): PlannerExpression =
+    throw new TableException("Unsupported function call: " + sqlCall)
+
+  override def visit(other: ResolvedExpression): PlannerExpression = visitNonApiExpression(other)
 
   override def visitNonApiExpression(other: Expression): PlannerExpression = {
     other match {

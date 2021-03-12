@@ -19,9 +19,12 @@
 package org.apache.flink.table.planner.plan.metadata
 
 import org.apache.flink.table.planner.plan.nodes.calcite.LogicalExpand
+import org.apache.flink.table.planner.plan.nodes.physical.stream.StreamPhysicalTableSourceScan
+import org.apache.flink.table.planner.plan.schema.TableSourceTable
 import org.apache.flink.table.planner.plan.utils.ExpandUtil
 
 import com.google.common.collect.{ImmutableList, ImmutableSet}
+import org.apache.calcite.prepare.CalciteCatalogReader
 import org.apache.calcite.sql.fun.SqlStdOperatorTable.{EQUALS, LESS_THAN}
 import org.apache.calcite.util.ImmutableBitSet
 import org.junit.Assert._
@@ -40,6 +43,17 @@ class FlinkRelMdUniqueKeysTest extends FlinkRelMdHandlerTestBase {
     Array(empLogicalScan, empBatchScan, empStreamScan).foreach { scan =>
       assertNull(mq.getUniqueKeys(scan))
     }
+
+    val table = relBuilder
+      .getRelOptSchema
+      .asInstanceOf[CalciteCatalogReader]
+      .getTable(Seq("projected_table_source_table"))
+      .asInstanceOf[TableSourceTable]
+    val tableSourceScan = new StreamPhysicalTableSourceScan(
+      cluster,
+      streamPhysicalTraits,
+      table)
+    assertEquals(uniqueKeys(Array(0, 2)), mq.getUniqueKeys(tableSourceScan).toSet)
   }
 
   @Test
@@ -68,6 +82,11 @@ class FlinkRelMdUniqueKeysTest extends FlinkRelMdHandlerTestBase {
   @Test
   def testGetUniqueKeysOnFilter(): Unit = {
     assertEquals(uniqueKeys(Array(0)), mq.getUniqueKeys(logicalFilter).toSet)
+  }
+
+  @Test
+  def testGetUniqueKeysOnWatermark(): Unit = {
+    assertEquals(uniqueKeys(Array(0)), mq.getUniqueKeys(logicalWatermarkAssigner).toSet)
   }
 
   @Test
@@ -148,8 +167,20 @@ class FlinkRelMdUniqueKeysTest extends FlinkRelMdHandlerTestBase {
 
   @Test
   def testGetUniqueKeysOnStreamExecDeduplicate(): Unit = {
-    assertEquals(uniqueKeys(Array(1)), mq.getUniqueKeys(streamDeduplicateFirstRow).toSet)
-    assertEquals(uniqueKeys(Array(1, 2)), mq.getUniqueKeys(streamDeduplicateLastRow).toSet)
+    assertEquals(uniqueKeys(Array(1)), mq.getUniqueKeys(streamProcTimeDeduplicateFirstRow).toSet)
+    assertEquals(uniqueKeys(Array(1, 2)), mq.getUniqueKeys(streamProcTimeDeduplicateLastRow).toSet)
+    assertEquals(uniqueKeys(Array(1)), mq.getUniqueKeys(streamRowTimeDeduplicateFirstRow).toSet)
+    assertEquals(uniqueKeys(Array(1, 2)), mq.getUniqueKeys(streamRowTimeDeduplicateLastRow).toSet)
+  }
+
+  @Test
+  def testGetUniqueKeysOnStreamExecChangelogNormalize(): Unit = {
+    assertEquals(uniqueKeys(Array(1, 0)), mq.getUniqueKeys(streamChangelogNormalize).toSet)
+  }
+
+  @Test
+  def testGetUniqueKeysOnStreamExecDropUpdateBefore(): Unit = {
+    assertEquals(uniqueKeys(Array(0)), mq.getUniqueKeys(streamDropUpdateBefore).toSet)
   }
 
   @Test
